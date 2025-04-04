@@ -1,0 +1,37 @@
+Flask==2.3.2
+Flask-Cors==3.0.10
+gunicorn==21.2.0
+
+# Web scraping
+requests==2.31.0
+beautifulsoup4==4.12.3
+lxml==5.1.0
+
+# NLP & Transformers
+transformers==4.39.3
+torch==2.2.2
+sentencepiece==0.2.0
+scikit-learn==1.4.1.post1
+
+# Offline Speech-to-Text (Vosk)
+vosk==0.3.45
+sounddevice==0.4.6
+numpy==1.26.4
+
+# Offline Text-to-Speech (Piper)
+piper-tts==1.2.0
+torchvision==0.17.2
+
+# JSON & PDF handling
+PyPDF2==3.0.1
+
+# Graphing for performance evaluation
+matplotlib==3.8.3
+pandas==2.2.1
+
+# Flutter/Android or Web communication (if using API)
+flask-restful==0.3.10
+flask-ngrok==0.0.25
+
+# Optional: environment variable loading
+python-dotenv==1.0.1
