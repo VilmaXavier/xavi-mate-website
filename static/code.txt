@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>College Chatbot</h1>
+<p>Chat with our bot here!</p>
+
+<div id="chatbox" style="border:1px solid #ccc; padding:10px; height:300px; overflow-y:scroll;"></div>
+<input type="text" id="user-input" placeholder="Ask me a question...">
+<button onclick="sendMessage()">Send</button>
+
+<script>
+    async function sendMessage() {
+        let userInput = document.getElementById("user-input").value;
+        if (!userInput) return;
+        
+        document.getElementById("chatbox").innerHTML += `<p><b>You:</b> ${userInput}</p>`;
+        document.getElementById("user-input").value = "";
+
+        let response = await fetch("/chatbot", {  // Updated the API route
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ query: userInput })
+        });
+
+        let data = await response.json();
+        document.getElementById("chatbox").innerHTML += `<p><b>Chatbot:</b> ${data.response}</p>`;
+    }
+</script>
+{% endblock %}

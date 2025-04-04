@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            transition: margin-left 0.3s;
+        }
+        #sidebar {
+            width: 250px;
+            position: fixed;
+            left: -250px;
+            top: 0;
+            height: 100%;
+            background: #f8f9fa;
+            transition: left 0.3s;
+            padding: 10px;
+        }
+        #sidebar.active {
+            left: 0;
+        }
+        #main-content {
+            transition: margin-left 0.3s;
+        }
+        .sidebar-open #main-content {
+            margin-left: 250px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-dark bg-danger">
+        <div class="container-fluid">
+            <button class="btn btn-light" onclick="toggleSidebar()">☰</button>
+        </div>
+    </nav>
+    
+    <div id="sidebar">
+        <h4>Menu <button class="btn btn-danger btn-sm" onclick="toggleSidebar()">✖</button></h4>
+        <ul class="nav flex-column">
+            <li class="nav-item"><a class="nav-link" href="/welcome">🏠 Welcome</a></li>
+            <li class="nav-item"><a class="nav-link" href="/student_info">🎓 Student Info</a></li>
+            <li class="nav-item"><a class="nav-link" href="/chatbot">💬 Chatbot</a></li>
+            <li class="nav-item"><a class="nav-link" href="/performance">💬 Performance Evaluation </a></li>
+            <li class="nav-item"><a class="nav-link" href="/examination">💬 Examination </a></li>
+            <li class="nav-item"><a class="nav-link" href="/directory">💬 Directory </a></li>
+            <li class="nav-item"><a class="nav-link" href="/navigation">💬 Navigation </a></li>
+            <li class="nav-item"><a class="nav-link text-danger" href="/logout">🚪 Logout</a></li>
+
+        </ul>
+    </div>
+    
+    <div id="main-content" class="p-4">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <script>
+        function toggleSidebar() {
+            document.body.classList.toggle("sidebar-open");
+            document.getElementById("sidebar").classList.toggle("active");
+        }
+    </script>
+</body>
+</html>

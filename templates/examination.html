@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Examination</h1>
+
+<div class="exam-container">
+    <a href="{{ url_for('exam_schedule') }}" class="exam-button">Exam Schedule</a>
+    <a href="{{ url_for('marks_obtained') }}" class="exam-button">Marks Obtained</a>
+    <a href="{{ url_for('result') }}" class="exam-button">Result</a>
+    <a href="{{ url_for('registration') }}" class="exam-button">Registration</a>
+</div>
+
+<style>
+    .exam-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        text-align: center;
+        margin-top: 30px;
+    }
+    .exam-button {
+        display: block;
+        background: red;
+        color: white;
+        padding: 15px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 18px;
+        text-align: center;
+    }
+    .exam-button:hover {
+        background: darkred;
+    }
+</style>
+
+{% endblock %}

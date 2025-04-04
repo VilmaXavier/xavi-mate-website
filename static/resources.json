@@ -1,0 +1,38 @@
+[
+    {
+      "office_name": "Library",
+      "email": "library@college.edu",
+      "phone": "123-456-7890",
+      "hours": "Mon-Fri: 8:00 AM - 6:00 PM",
+      "address": "Building A, Campus"
+    },
+    {
+      "office_name": "Admissions",
+      "email": "admissions@college.edu",
+      "phone": "123-456-7891",
+      "hours": "Mon-Fri: 9:00 AM - 5:00 PM",
+      "address": "Building B, Campus"
+    },
+    {
+      "office_name": "Counseling Services",
+      "email": "counseling@college.edu",
+      "phone": "123-456-7892",
+      "hours": "Mon-Fri: 10:00 AM - 4:00 PM",
+      "address": "Building C, Campus"
+    },
+    {
+      "office_name": "Career Services",
+      "email": "careerservices@college.edu",
+      "phone": "123-456-7893",
+      "hours": "Mon-Fri: 9:00 AM - 5:00 PM",
+      "address": "Building D, Campus"
+    },
+    {
+      "office_name": "Registrar's Office",
+      "email": "registrar@college.edu",
+      "phone": "123-456-7894",
+      "hours": "Mon-Fri: 9:00 AM - 5:00 PM",
+      "address": "Building E, Campus"
+    }
+  ]
+  

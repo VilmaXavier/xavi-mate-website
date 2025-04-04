@@ -1,0 +1,114 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Results</h1>
+
+<!-- Semester Buttons with Student Info -->
+<div class="semester-buttons">
+    <a href="{{ url_for('static', filename='pdfs/semester1.pdf') }}" class="semester-button">
+        <div class="button-content">
+            <span class="student-info">{{ student_data.academic_year }} {{ student_data.year_group }}</span>
+            <span class="student-name">{{ student_data.name }}</span>
+            <span class="student-id">{{ student_data.id }}</span>
+            <span class="semester-text">Semester I</span>
+        </div>
+    </a>
+    <a href="{{ url_for('static', filename='pdfs/semester2.pdf') }}" class="semester-button">
+        <div class="button-content">
+            <span class="student-info">{{ student_data.academic_year }} {{ student_data.year_group }}</span>
+            <span class="student-name">{{ student_data.name }}</span>
+            <span class="student-id">{{ student_data.id }}</span>
+            <span class="semester-text">Semester II</span>
+        </div>
+    </a>
+    <a href="{{ url_for('static', filename='pdfs/semester3.pdf') }}" class="semester-button">
+        <div class="button-content">
+            <span class="student-info">{{ student_data.academic_year }} {{ student_data.year_group }}</span>
+            <span class="student-name">{{ student_data.name }}</span>
+            <span class="student-id">{{ student_data.id }}</span>
+            <span class="semester-text">Semester III</span>
+        </div>
+    </a>
+    <a href="{{ url_for('static', filename='pdfs/semester4.pdf') }}" class="semester-button">
+        <div class="button-content">
+            <span class="student-info">{{ student_data.academic_year }} {{ student_data.year_group }}</span>
+            <span class="student-name">{{ student_data.name }}</span>
+            <span class="student-id">{{ student_data.id }}</span>
+            <span class="semester-text">Semester IV</span>
+        </div>
+    </a>
+    <a href="{{ url_for('static', filename='pdfs/semester5.pdf') }}" class="semester-button">
+        <div class="button-content">
+            <span class="student-info">{{ student_data.academic_year }} {{ student_data.year_group }}</span>
+            <span class="student-name">{{ student_data.name }}</span>
+            <span class="student-id">{{ student_data.id }}</span>
+            <span class="semester-text">Semester V</span>
+        </div>
+    </a>
+    <a href="{{ url_for('static', filename='pdfs/semester6.pdf') }}" class="semester-button">
+        <div class="button-content">
+            <span class="student-info">{{ student_data.academic_year }} {{ student_data.year_group }}</span>
+            <span class="student-name">{{ student_data.name }}</span>
+            <span class="student-id">{{ student_data.id }}</span>
+            <span class="semester-text">Semester VI</span>
+        </div>
+    </a>
+</div>
+
+<style>
+    .semester-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+        width: 100%;
+        align-items: center;
+    }
+
+    .semester-button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: red;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        font-size: 16px;
+        width: 400px; /* Increased width */
+        height: 100px;  /* Increased height for longer buttons */
+        text-align: center;
+        font-weight: bold;
+        border: 2px solid white;
+    }
+
+    .semester-button:hover {
+        background: darkred;
+    }
+
+    .button-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .student-info {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .student-name {
+        font-size: 16px;
+    }
+
+    .student-id {
+        font-size: 16px;
+    }
+
+    .semester-text {
+        font-size: 20px;
+        font-weight: bold;
+    }
+</style>
+
+{% endblock %}

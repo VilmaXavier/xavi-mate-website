@@ -1,0 +1,119 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Campus Resources Directory</h1>
+
+<!-- Search Box -->
+<div class="search-container">
+    <input type="text" id="searchBox" placeholder="Search for an office..." onkeyup="searchResources()">
+</div>
+
+<!-- Resources List -->
+<div id="resourceList"></div>
+
+<!-- Inline Styling -->
+<style>
+    /* Search box styling */
+    .search-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    #searchBox {
+        padding: 10px;
+        width: 80%;
+        max-width: 300px;
+        font-size: 16px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    /* Resource items container */
+    .resource {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+    }
+    .resource h3 {
+        margin: 0;
+        font-size: 20px;
+        color: #333;
+    }
+    .resource p {
+        margin: 10px 0;
+        font-size: 16px;
+        color: #555;
+    }
+    .resource a {
+        color: #0066cc;
+        text-decoration: none;
+    }
+    .resource a:hover {
+        text-decoration: underline;
+    }
+
+    /* Responsive design for smaller screens */
+    @media (max-width: 600px) {
+        #searchBox {
+            width: 100%;
+        }
+    }
+</style>
+
+<!-- JavaScript for handling resource search -->
+<script>
+    let resources = [];
+
+    // Fetch the resource data from the resources.json file
+    fetch('static/resources.json')
+        .then(response => response.json())
+        .then(data => {
+            resources = data;
+            loadResources();
+        })
+        .catch(error => {
+            console.error("Error loading resources:", error);
+        });
+
+    function loadResources() {
+        const list = document.getElementById('resourceList');
+        list.innerHTML = '';
+        resources.forEach(resource => {
+            const resourceDiv = document.createElement('div');
+            resourceDiv.classList.add('resource');
+            resourceDiv.innerHTML = `
+                <h3>${resource.office_name}</h3>
+                <p>Email: <a href="mailto:${resource.email}">${resource.email}</a></p>
+                <p>Phone: ${resource.phone}</p>
+                <p>Hours: ${resource.hours}</p>
+                <p>Address: ${resource.address}</p>
+            `;
+            list.appendChild(resourceDiv);
+        });
+    }
+
+    function searchResources() {
+        const query = document.getElementById('searchBox').value.toLowerCase();
+        const filteredResources = resources.filter(resource => 
+            resource.office_name.toLowerCase().includes(query)
+        );
+        
+        const list = document.getElementById('resourceList');
+        list.innerHTML = '';
+        filteredResources.forEach(resource => {
+            const resourceDiv = document.createElement('div');
+            resourceDiv.classList.add('resource');
+            resourceDiv.innerHTML = `
+                <h3>${resource.office_name}</h3>
+                <p>Email: <a href="mailto:${resource.email}">${resource.email}</a></p>
+                <p>Phone: ${resource.phone}</p>
+                <p>Hours: ${resource.hours}</p>
+                <p>Address: ${resource.address}</p>
+            `;
+            list.appendChild(resourceDiv);
+        });
+    }
+</script>
+
+{% endblock %}
