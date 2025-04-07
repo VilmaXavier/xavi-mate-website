@@ -1,6 +1,181 @@
 {% extends "layout.html" %}
 
 {% block content %}
+<style>
+    .dashboard {
+        font-family: 'Segoe UI', sans-serif;
+        background: #f8f9fc;
+        padding: 2rem;
+    }
+
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(135deg, #bd1c4c 0%, #8f0d38 100%);
+        color: white;
+        padding: 1.5rem;
+        border-radius: 1rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-content h1 {
+        font-size: 1.8rem;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .academic-badges {
+        margin-top: 0.5rem;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.4rem 0.8rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        margin-right: 0.5rem;
+    }
+
+    .status-pass { background-color: #28a745; color: white; }
+    .status-fail { background-color: #dc3545; color: white; }
+    .semester { background-color: #ffc107; color: black; }
+
+    .student-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .avatar {
+        background: #ffffff22;
+        border: 2px solid white;
+        color: white;
+        font-weight: bold;
+        font-size: 1.5rem;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .metric-card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .metric-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    .bg-info { background: #ab1e27; }
+    .bg-danger { background: #dc3545; }
+    .bg-warning { background: #ffc107; color: black; }
+
+    .metric-content h3 {
+        margin: 0;
+        font-size: 1.1rem;
+    }
+
+    .metric-value {
+        font-size: 1.4rem;
+        font-weight: bold;
+        margin-top: 0.5rem;
+    }
+
+    .progress-bar {
+        background: #eee;
+        border-radius: 0.5rem;
+        overflow: hidden;
+        height: 8px;
+        margin-top: 0.5rem;
+    }
+
+    .progress {
+        background: #28a745;
+        height: 100%;
+    }
+
+    .trend-indicator {
+        margin-top: 0.5rem;
+        font-weight: 500;
+    }
+
+    .trend-indicator.improving { color: #28a745; }
+    .trend-indicator.declining { color: #dc3545; }
+
+    .visualization-section .card {
+        background: white;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .graph-legend {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
+    .legend-color {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+    }
+
+    .legend-color.actual { background: #a42446; }
+    .legend-color.predicted { background: #ffc107; }
+
+    .card-body {
+        text-align: center;
+    }
+
+    .empty-state {
+        padding: 2rem;
+        color: #999;
+    }
+
+    .empty-state i {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+    }
+</style>
+
 <div class="dashboard">
     <header class="dashboard-header">
         <div class="header-content">
@@ -42,7 +217,7 @@
                 </div>
             </div>
         </div>
-        
+
         {% if analysis.prediction %}
         <div class="metric-card">
             <div class="metric-icon bg-{{ 'danger' if analysis.prediction.trend == 'declining' else 'warning' }}">
