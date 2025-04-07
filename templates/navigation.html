@@ -3,15 +3,18 @@
 {% block content %}
 <h1>St. Xavier's College, Mumbai - Campus Navigation</h1>
 
-<!-- Search Box for Locations -->
+<!-- Search & Mic -->
 <div class="search-container">
-    <input type="text" id="searchBox" placeholder="Search for a location..." onkeyup="searchLocation()">
+    <input type="text" id="searchBox" placeholder='Type or say "LR 20"' oninput="showSuggestions()" onkeyup="searchLocation(event)">
+    <button onclick="startVoiceInput()" aria-label="Start voice input">🎤</button>
+    <div id="suggestions" class="suggestions-box"></div>
 </div>
 
-<!-- Mapbox Map Container -->
+<!-- Map -->
 <div id="map"></div>
+<p id="textDirections" style="margin-top: 15px; font-weight: bold;"></p>
 
-<!-- Inline Styling -->
+<!-- Styles -->
 <style>
     #map {
         width: 100%;
@@ -21,56 +24,191 @@
     .search-container {
         text-align: center;
         margin-bottom: 20px;
+        position: relative;
     }
     #searchBox {
         padding: 10px;
-        width: 80%;
+        width: 70%;
         max-width: 300px;
         font-size: 16px;
         border: 1px solid #ccc;
         border-radius: 5px;
     }
+    button {
+        padding: 10px;
+        margin-left: 10px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    .suggestions-box {
+        background: white;
+        border: 1px solid #ccc;
+        border-top: none;
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 70%;
+        max-width: 300px;
+        z-index: 1000;
+    }
+    .suggestion {
+        padding: 8px;
+        cursor: pointer;
+        text-align: left;
+    }
+    .suggestion:hover {
+        background-color: #f0f0f0;
+    }
 </style>
 
-<!-- Include Mapbox GL JS -->
+<!-- Scripts -->
 <script src='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js'></script>
 <link href='https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css' rel='stylesheet' />
+<script src="https://cdn.jsdelivr.net/npm/@mapbox/mapbox-gl-directions@4.1.1/dist/mapbox-gl-directions.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mapbox/mapbox-gl-directions@4.1.1/dist/mapbox-gl-directions.css" />
 
 <script>
-    mapboxgl.accessToken = 'pk.eyJ1IjoidmlsbWExMiIsImEiOiJjbTkxc2drd3QwNTIyMmxzOHN0ejNwanVwIn0.LmFMjaJmX8d5kBulH752gw'; // Replace with your Mapbox token
+    mapboxgl.accessToken = 'pk.eyJ1IjoidmlsbWExMiIsImEiOiJjbTkxc2drd3QwNTIyMmxzOHN0ejNwanVwIn0.LmFMjaJmX8d5kBulH752gw';
 
-    // Initialize the map centered on St. Xavier's College, Mumbai
-    var map = new mapboxgl.Map({
+    const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/mapbox/streets-v11',
-        center: [72.83077, 18.95165], // Coordinates for St. Xavier's College, Mumbai
+        center: [72.83077, 18.95165],
         zoom: 17
     });
 
-    // Sample Outdoor Locations
-    var locations = [
+    const directions = new MapboxDirections({
+        accessToken: mapboxgl.accessToken,
+        unit: 'metric',
+        profile: 'mapbox/walking',
+        controls: { inputs: false, instructions: false }
+    });
+
+    map.addControl(directions, 'top-left');
+
+    const locations = [
         { name: "Main Gate", coordinates: [72.8305, 18.9519] },
         { name: "College Building", coordinates: [72.8306, 18.9516] },
         { name: "Canteen Area", coordinates: [72.8308, 18.9514] },
-        { name: "Ground", coordinates: [72.8303, 18.9513] }
+        { name: "Ground", coordinates: [72.8303, 18.9513] },
+        { name: "LR 01", coordinates: [72.83103, 18.94275] },
+        { name: "LR 02", coordinates: [72.83186, 18.94342] },
+        { name: "LR 11", coordinates: [72.83267, 18.94197] },
+        { name: "LR 12", coordinates: [72.83100, 18.94436] },
+        { name: "LR 13", coordinates: [72.83042, 18.94197] },
+        { name: "LR 14", coordinates: [72.83153, 18.94318] },
+        { name: "LR 20A", coordinates: [72.83142, 18.94264] },
+        { name: "LR 20B", coordinates: [72.83142, 18.94264] },
+        { name: "LR 20C", coordinates: [72.83119, 18.94275] },
+        { name: "LR 20D", coordinates: [72.83142, 18.94266] },
+        { name: "LR 20E", coordinates: [72.83119, 18.94275] },
+        { name: "LR 20F", coordinates: [72.83103, 18.94275] },
+        { name: "LR 20G", coordinates: [72.83117, 18.94306] },
+        { name: "LR 22", coordinates: [72.83119, 18.94303] },
+        { name: "LR 23", coordinates: [72.83125, 18.94333] },
+        { name: "LR 24", coordinates: [72.83128, 18.94308] },
+        { name: "LR 25", coordinates: [72.83139, 18.94312] },
+        { name: "LR 26", coordinates: [72.83142, 18.94336] },
+        { name: "LR 27", coordinates: [72.83160, 18.94342] }
     ];
 
-    // Add markers to the map
-    locations.forEach(location => {
-        new mapboxgl.Marker()
-            .setLngLat(location.coordinates)
-            .setPopup(new mapboxgl.Popup().setText(location.name))
+    locations.forEach(loc => {
+        new mapboxgl.Marker().setLngLat(loc.coordinates)
+            .setPopup(new mapboxgl.Popup().setText(loc.name))
             .addTo(map);
     });
 
-    // Search Function
-    function searchLocation() {
-        var query = document.getElementById('searchBox').value.toLowerCase();
-        var result = locations.find(loc => loc.name.toLowerCase().includes(query));
+    function showSuggestions() {
+        const input = document.getElementById('searchBox').value.toLowerCase();
+        const suggestionsBox = document.getElementById('suggestions');
+        suggestionsBox.innerHTML = "";
 
-        if (result) {
-            map.flyTo({ center: result.coordinates, zoom: 18 });
+        if (input.length < 2) return;
+
+        const matches = locations.filter(loc => loc.name.toLowerCase().includes(input));
+        matches.forEach(loc => {
+            const div = document.createElement('div');
+            div.className = 'suggestion';
+            div.textContent = loc.name;
+            div.onclick = () => {
+                document.getElementById('searchBox').value = loc.name;
+                suggestionsBox.innerHTML = '';
+                startNavigation(loc);
+            };
+            suggestionsBox.appendChild(div);
+        });
+    }
+
+    function searchLocation(event) {
+        if (event.key === 'Enter') {
+            const input = document.getElementById('searchBox').value.trim().toLowerCase();
+            const matched = locations.filter(loc => loc.name.toLowerCase().includes(input));
+            if (matched.length === 1) {
+                startNavigation(matched[0]);
+            } else if (matched.length > 1) {
+                // Let dropdown handle it
+            } else {
+                speak("We couldn't find that room inside campus. Please check the name.");
+                document.getElementById("textDirections").innerText = "Try typing like 'LR 20A' or 'Canteen Area'";
+            }
         }
+    }
+
+    function startNavigation(destination) {
+        navigator.geolocation.getCurrentPosition(position => {
+            const userCoords = [position.coords.longitude, position.coords.latitude];
+            directions.setOrigin(userCoords);
+            directions.setDestination(destination.coordinates);
+
+            const url = `https://api.mapbox.com/directions/v5/mapbox/walking/${userCoords[0]},${userCoords[1]};${destination.coordinates[0]},${destination.coordinates[1]}?steps=true&access_token=${mapboxgl.accessToken}`;
+
+            fetch(url)
+                .then(res => res.json())
+                .then(data => {
+                    const steps = data.routes[0].legs[0].steps.map(step => step.maneuver.instruction);
+                    const directionsText = steps.join(". ") + ". You have arrived at your destination.";
+                    speak(`Navigating to ${destination.name}. ${directionsText}`);
+                    document.getElementById("textDirections").innerText = directionsText;
+                })
+                .catch(err => {
+                    speak("Error fetching directions.");
+                    document.getElementById("textDirections").innerText = "Error loading directions.";
+                });
+        }, () => {
+            speak("Location access denied.");
+            document.getElementById("textDirections").innerText = "Geolocation access is needed.";
+        });
+    }
+
+    function speak(text) {
+        const synth = window.speechSynthesis;
+        const utter = new SpeechSynthesisUtterance(text);
+        utter.rate = 1;
+        utter.pitch = 1;
+        synth.speak(utter);
+    }
+
+    function startVoiceInput() {
+        if (!('webkitSpeechRecognition' in window)) {
+            alert("Speech recognition not supported.");
+            return;
+        }
+
+        const recognition = new webkitSpeechRecognition();
+        recognition.lang = 'en-US';
+        recognition.start();
+
+        recognition.onresult = function (event) {
+            const transcript = event.results[0][0].transcript;
+            document.getElementById('searchBox').value = transcript;
+            showSuggestions();
+            searchLocation({ key: 'Enter' });
+        };
+
+        recognition.onerror = function () {
+            speak("Sorry, I couldn't understand that.");
+        };
     }
 </script>
 {% endblock %}
